@@ -30,13 +30,13 @@ function main(){
   box.addFolder("/Project Gorgon","Dogs");
   box.addFolder("/Project Gorgon/Subjects","pan");
   box.addFolder("/Project Gorgon/Subjects/pan","ldledle");
-  box.addFolder("/Project Gorgon/Subjects/pan","poop");
-  box.addFolder("/Project Gorgon/Subjects/pan/poop","cathegories");
-  box.addFolder("/Project Gorgon/Subjects/pan/poop/cathegories","Liquid");
-  box.addFolder("/Project Gorgon/Subjects/pan/poop/cathegories","Solid");
-  box.addFolder("/Project Gorgon/Subjects/pan/poop/cathegories","Gas");
-  box.addFile("/Project Gorgon/Subjects/pan/poop/cathegories/Gas",new _gd_sandbox_file("Efect of gas type poop", "text/plain","The effects of the Gas type poop are so horendous that i dare not describe them in this document. Sowwy :("));
-  box.addFile("/Project Gorgon/Subjects/pan/poop/cathegories",new _gd_sandbox_file("read me", "text/plain","Good job."));
+  box.addFolder("/Project Gorgon/Subjects/pan","pate");
+  box.addFolder("/Project Gorgon/Subjects/pan/pate","cathegories");
+  box.addFolder("/Project Gorgon/Subjects/pan/pate/cathegories","Liquid");
+  box.addFolder("/Project Gorgon/Subjects/pan/pate/cathegories","Solid");
+  box.addFolder("/Project Gorgon/Subjects/pan/pate/cathegories","Gas");
+  box.addFile("/Project Gorgon/Subjects/pan/pate/cathegories/Gas",new _gd_sandbox_file("Efect of gas type pate", "text/plain","The effects of the Gas type pate are so horendous that i dare not describe them in this document. Sowwy :("));
+  box.addFile("/Project Gorgon/Subjects/pan/pate/cathegories",new _gd_sandbox_file("read me", "text/plain","Good job."));
   box.addFile("/Project Gorgon",new _gd_sandbox_file("test", "text/plain","Mad lad"));
   
   let Tete = box.newProject("Tete");

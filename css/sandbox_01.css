@@ -1,0 +1,201 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.gd_sandBox {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  /*.folder::before{
+    position: absolute;
+    display: block;
+    content: "";
+    background: url("../src/folder_indicator.svg");
+    background-color: red;
+    width: 16px;
+    height: 16px;
+    left: -20px;
+    top: calc(50% - 16px);
+  }*/
+}
+.gd_sandBox * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.gd_sandBox > * {
+  position: absolute;
+  border: 2px solid red;
+}
+.gd_sandBox nav {
+  width: 20%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  overflow: auto;
+}
+.gd_sandBox nav li {
+  list-style-type: none;
+}
+.gd_sandBox nav .name {
+  display: inline-block;
+  min-width: 100%;
+  white-space: nowrap;
+}
+.gd_sandBox header {
+  width: 80%;
+  height: 10%;
+  left: 20%;
+  top: 0;
+}
+.gd_sandBox section {
+  width: 80%;
+  height: 80%;
+  left: 20%;
+  top: 10%;
+}
+.gd_sandBox footer {
+  width: 80%;
+  height: 10%;
+  left: 20%;
+  top: 90%;
+}
+.gd_sandBox .project {
+  position: relative;
+  display: inline-block;
+  min-width: 100%;
+  overflow-x: visible;
+  margin-top: 5%;
+  user-select: none;
+}
+.gd_sandBox .project > .name {
+  position: relative;
+  padding: 10px 0;
+  padding-left: 30px;
+  font-size: 29px;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.gd_sandBox .project > .name .gd-folder-icon {
+  position: absolute;
+  top: calc(50% - 8px);
+  left: 4px;
+  height: 16px;
+  width: 16px;
+  fill: black;
+  stroke: #ff2f2f;
+  transform: rotate(-45deg);
+}
+.gd_sandBox .project.show-content > .name .gd-folder-icon {
+  transform: rotate(0deg);
+}
+.gd_sandBox .folder {
+  display: inline-block;
+  position: relative;
+  min-width: 100%;
+  height: 10%;
+  margin-top: 1%;
+  margin-left: 2px;
+  padding-left: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+.gd_sandBox .folder > .name {
+  position: relative;
+  font-size: 23px;
+}
+.gd_sandBox .folder > .name .gd-folder-icon {
+  position: absolute;
+  top: calc(50% - 8px);
+  left: -26px;
+  height: 16px;
+  width: 16px;
+  fill: black;
+  stroke: #ff2f2f;
+  transform: rotate(-45deg);
+}
+.gd_sandBox .folder > .name:hover {
+  background-color: white;
+}
+.gd_sandBox .folder .folder-content {
+  margin-left: 2%;
+}
+.gd_sandBox .folder:hover {
+  background-color: rgba(8, 42, 240, 0.15);
+}
+.gd_sandBox .folder.show-content > .name .gd-folder-icon {
+  transform: rotate(0deg);
+}
+.gd_sandBox .file {
+  display: inline-block;
+  position: relative;
+  min-width: 100%;
+  height: 10%;
+}
+.gd_sandBox .file > .name {
+  font-size: 23px;
+}
+.gd_sandBox .file:hover {
+  background-color: rgba(16, 240, 8, 0.5);
+}
+.gd_sandBox .editor {
+  width: 100%;
+  height: 90%;
+  resize: none;
+  padding: 25px;
+  font-size: 15px;
+  background-color: #e6e6e6;
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  bottom: 0;
+}
+.gd_sandBox .editor-selector {
+  position: relative;
+  height: 10%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background-color: grey;
+  width: auto;
+}
+.gd_sandBox .editor-selector .selector {
+  display: inline-block;
+  height: 100%;
+  width: 150px;
+  margin: 0 5px;
+  background-color: white;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+}
+.gd_sandBox .editor-selector .selector.seleted {
+  background-color: #a6f5ff;
+}
+
+.context-menu {
+  position: fixed;
+  height: auto;
+  background-color: #03dae996;
+  border: 1px solid black;
+  z-index: 10;
+  top: 50px;
+  left: 50px;
+}
+.context-menu div {
+  font-size: 25px;
+  padding: 10px 5px;
+  border: 1px solid rgba(128, 128, 128, 0.548);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.context-menu div:hover {
+  background-color: white;
+}
+
+/*# sourceMappingURL=sandbox_01.css.map */

@@ -1,0 +1,224 @@
+html, body{
+  height: 100%;
+  margin: 0;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+.gd_sandBox{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  > *{
+    position: absolute;
+    border: 2px solid red;
+  }
+  $nav-width : 20%;
+  nav{
+    width: $nav-width;
+    height: 100%;
+    left: 0;
+    top: 0;
+    overflow: auto;
+    li{
+      list-style-type: none;
+    }
+    .name{
+      display: inline-block;
+      min-width: 100%;
+      white-space: nowrap;
+    }
+  }
+  header{
+    width: 80%;
+    height: 10%;
+    left: $nav-width;
+    top: 0;
+  }
+  section{
+    width: 80%;
+    height: 80%;
+    left: $nav-width;
+    top: 10%;
+  }
+  footer{
+    width: 80%;
+    height: 10%;
+    left: $nav-width;
+    top: 90%;
+  }
+
+  $borders : 1px solid rgb(0, 0, 0);
+
+  $project-fontSize : 29px;
+  $folder-file-fontSize : 23px;
+  .project{
+    position: relative;
+    display: inline-block;
+    min-width: 100%;
+    overflow-x: visible;
+    //border-left: $borders;
+    margin-top: 5%;
+    >.name{
+      position: relative;
+      padding: 10px 0;
+      padding-left: 30px;
+      font-size: $project-fontSize;
+      font-weight: bold;
+      background-color: rgba($color: #000000, $alpha: 0.3);
+      .gd-folder-icon{
+        position: absolute;
+        top: calc(50% - 8px);
+        left: 4px;
+        height: 16px;
+        width: 16px;
+        fill: rgb(0, 0, 0);
+        stroke: rgb(255, 47, 47);
+        transform: rotate(-45deg);
+      }
+    }
+    user-select: none;
+    
+  }
+  .project.show-content{
+    >.name{
+      .gd-folder-icon{
+        transform: rotate(0deg);
+      }
+    }
+  }
+  
+  .folder{
+    display: inline-block;
+    position: relative;
+    min-width: 100%;
+    height: 10%;
+    //@at-rootborder-left: 1px solid rgba(0, 0, 0, 0.8);
+    margin-top: 1%;
+    margin-left: 2px;
+    padding-left: 16px;
+    border-bottom: 1px solid rgba($color: #000000, $alpha: 0.3);
+    >.name{
+      position: relative;
+      font-size: $folder-file-fontSize;
+      //background-color: brown;
+    .gd-folder-icon{
+      position: absolute;
+      top: calc(50% - 8px);
+      left: -26px;
+      height: 16px;
+      width: 16px;
+      fill: rgb(0, 0, 0);
+      stroke: rgb(255, 47, 47);
+      transform: rotate(-45deg);
+    }
+    }
+    >.name:hover{
+      background-color: white;
+    }
+    .folder-content{
+      margin-left: 2%;
+    }
+  }
+  .folder:hover{
+    background-color: rgba(8, 42, 240, 0.15);
+  }
+  .folder.show-content{
+    >.name{
+      .gd-folder-icon{
+        transform: rotate(0deg);
+      }
+    }
+  }
+  /*.folder::before{
+    position: absolute;
+    display: block;
+    content: "";
+    background: url("../src/folder_indicator.svg");
+    background-color: red;
+    width: 16px;
+    height: 16px;
+    left: -20px;
+    top: calc(50% - 16px);
+  }*/
+  .file{
+    display: inline-block;
+    position: relative;
+    min-width: 100%;
+    height: 10%;
+    >.name{
+      font-size: $folder-file-fontSize;
+    }
+  }
+  .file:hover{
+    background-color: rgba(16, 240, 8, 0.5);
+  }
+
+
+  .editor{
+    width: 100%;
+    height: 90%;
+    resize: none;
+    padding: 25px;
+    font-size: 15px;
+    background-color: rgb(230, 230, 230);
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    bottom: 0;
+  }
+  .editor-selector{
+    position: relative;
+    height: 10%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background-color: grey;
+    width: auto;
+    //padding: 10px;
+    .selector{
+      display: inline-block;
+      height: 100%;
+      width: 150px;
+      margin: 0 5px;
+      background-color: rgb(255, 255, 255);
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+    }
+    .selector.seleted{
+      background-color: rgb(166, 245, 255);
+    }
+  }
+}
+.context-menu{
+  position: fixed;
+  //width: 150px;
+  height: auto;
+  background-color: #03dae996;
+  border: 1px solid black;
+  z-index: 10;
+
+  top: 50px;
+  left: 50px;
+  div{
+    font-size: 25px;
+    padding: 10px 5px;
+    //margin: 10px 0; 
+    //text-align: center; 
+    border: 1px solid rgba(128, 128, 128, 0.548);
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  div:hover{
+    background-color: white;
+  }
+}

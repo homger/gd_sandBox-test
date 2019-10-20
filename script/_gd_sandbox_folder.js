@@ -265,7 +265,10 @@ class _gd_sandbox_folder{
 
     removeFolder(){
       if(this.parentFolder instanceof _gd_sandbox_folder){
+        
+        this._files.forEach(file => file.removeFile());
         this.parentFolder._folders.delete(this.name);
+
       }
       this.uiElement.parentNode.removeChild(this.uiElement);
     }

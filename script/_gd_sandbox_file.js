@@ -129,6 +129,7 @@ class _gd_sandbox_file{
         this.parentFolder._files.delete(this.name);
       }
       this.uiElement.parentNode.removeChild(this.uiElement);
+      console.log( this.name + "UI ROMVED");
     }
 }
 function _fileFromFileData(file){

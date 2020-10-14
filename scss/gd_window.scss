@@ -1,0 +1,25 @@
+._gd_window{
+    //background-color: rgba(51, 255, 0, 0.507);
+    border: 2px solid black;
+}
+
+._gd_window .control-panel{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    background-color: tomato;
+    width: 100%;
+}
+._gd_window  .control-panel > div{
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: blueviolet;
+    border: 2px solid black;
+    width: 15%;
+    margin: 0;
+}

@@ -3,11 +3,12 @@
 document.addEventListener("readystatechange", function(){
 
   if(document.readyState === "complete"){
-
+    loadScript("script/_gd_window.js");
     loadScript("script/_gd_sandbox_file.js");
     loadScript("script/_gd_sandbox_folder.js");
     loadScript("script/_gd_sandbox_project.js");
     loadScript("script/_gd_sandbox_editor.js");
+    loadScript("script/_gd_context_menu.js");
     loadScript({src: "script/gd_SandBox.js", loadFunction: main});
     //console.log("MAIN :" + main);
 
@@ -16,6 +17,8 @@ document.addEventListener("readystatechange", function(){
 
 
 function main(){
+  let viewer = document.createElement("div");
+  viewer.className = "LOL";
   console.log("main start");
   let box = new gd_SandBox({
     nav: document.querySelector(".gd_sandBox > nav"),
@@ -24,6 +27,9 @@ function main(){
     footer: document.querySelector(".gd_sandBox > footer"),
   }
   );
+  document.querySelector(".gd_sandBox > section").appendChild(viewer);
+  
+  //let _win = new _gd_window(viewer,{boundingBlock: document.querySelector(".gd_sandBox > section")});
   box.newProject("Project Gorgon");
 
   box.addFolder("/Project Gorgon","Subjects");

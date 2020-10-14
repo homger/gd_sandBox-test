@@ -8,6 +8,8 @@ const PARAMETERS_DEFAULT_VALUE = {
 }
 const UI_ELEMENTS_NAME = ["nav","header","editor","footer"]
 
+const folderClassName = "folder";
+
 class gd_SandBox{
 
     constructor(parameters = PARAMETERS_DEFAULT_VALUE){
@@ -23,7 +25,7 @@ class gd_SandBox{
         this.projectCount = 0;
         this.initialSetUp();
         
-        window.addEventListener("contextmenu", this.contextMenuCall);
+        //window.addEventListener("contextmenu", this.contextMenuCall);
         window.addEventListener("dblclick", this.dblclickCall);
         this.___windowClick = this.___windowClick.bind(this);
         this.removeContextMenu = this.removeContextMenu.bind(this);
@@ -210,6 +212,59 @@ class gd_SandBox{
       return {x:_x,y:_y};
     }
     contextMenuSetup(){
+      //
+      let scope = document.body;
+      //
+      this.contextMenu = new _gd_context_menu(scope);
+
+      this.contextMenu.addContextMenu("folder");//,[], [folderClassName]);
+      this.contextMenu.addClass("folder", folderClassName);
+
+
+      this.contextMenu.addOption("folder",["New Folder", function(uiElementCaller){
+        console.log(uiElementCaller._gd_oject);
+        this.contextMenu_ChoosenElement =  uiElementCaller._gd_oject;
+        this.contextMenu_ChoosenElement.newFolder(prompt("New Folder name", "N/A"));
+      }.bind(this)]);
+      this.contextMenu.addOption("folder",["Remove folder", function(uiElementCaller){
+        this.contextMenu_ChoosenElement =  uiElementCaller._gd_oject;
+        this.contextMenu_ChoosenElement.removeFolder();
+      }.bind(this)]);
+      
+      
+      this.contextMenu.addContextMenu("project",[],["project"]);
+      this.contextMenu.addOption("project",["New Folder", function(uiElementCaller){
+          this.contextMenu_ChoosenElement =  uiElementCaller._gd_oject;
+          this.contextMenu_ChoosenElement.newFolder(prompt("New Folder name", "N/A"));
+        }.bind(this)]);
+      
+      this.contextMenu.addContextMenu("file",[
+        ["Remove file", function(uiElementCaller){
+
+          this.contextMenu_ChoosenElement =  uiElementCaller._gd_oject;
+
+          if(this.contextMenu_ChoosenElement.isOpen){
+            this.closeFile(this.contextMenu_ChoosenElement);
+          }
+          this.contextMenu_ChoosenElement.removeFile();
+          
+        }.bind(this), "remove-file"],
+
+        ["Open file", function(uiElementCaller){
+
+          this.contextMenu_ChoosenElement =  uiElementCaller._gd_oject;
+          this.openFile(this.contextMenu_ChoosenElement);
+
+        }.bind(this), "open-file"],
+
+        ["Close file", function(uiElementCaller){
+          
+          this.contextMenu_ChoosenElement =  uiElementCaller._gd_oject;
+          this.closeFile(this.contextMenu_ChoosenElement);
+
+        }.bind(this), "close-file"],
+      ], ["file","selector"]);
+      /*
       this.contextMenuList = [];
       
       this.contextMenuMake("folder",[
@@ -219,12 +274,6 @@ class gd_SandBox{
         ["Remove folder", function(){
           this.contextMenu_ChoosenElement.removeFolder();
         }.bind(this), "remove-folder"],
-      ]);
-      
-      this.contextMenuMake("project",[
-        ["New Folder", function(){
-          this.contextMenu_ChoosenElement.newFolder(prompt("New Folder name", "N/A"));
-        }.bind(this), "add-folder"],
       ]);
       
       this.contextMenuMake("file",[
@@ -241,7 +290,7 @@ class gd_SandBox{
           this.closeFile(this.contextMenu_ChoosenElement);
         }.bind(this), "close-file"],
       ]);
-
+      */
 
       }
     

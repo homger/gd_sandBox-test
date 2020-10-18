@@ -2,7 +2,7 @@
 
 const contextMenuClassName = "context-menu";
 const _contextMenuWraper_className = "context-menu-wrapper";
-
+const autoDismountContextMenu = true;
 
 const contextMenuOptions = {
   classList : [],
@@ -26,7 +26,8 @@ class _gd_context_menu{
 
       this.contextMenu_ToCall = new Set();
       this._lastTarget = null;
-      
+      this.autoDismountContextMenu = autoDismountContextMenu;
+      this.dismountContextMenu = this.dismountContextMenu.bind(this);
       
 
       this.setUp();
@@ -44,7 +45,7 @@ class _gd_context_menu{
         this._HTMLClassList.get(className).add(contextMenuName);
 
       });
-      this.contextMenuList.set(contextMenuName, new __context_menu(contextMenuName, menuOptions, _HTMLClassList));
+      this.contextMenuList.set(contextMenuName, new __context_menu(contextMenuName, menuOptions, _HTMLClassList, this.dismountContextMenu));
     }
     addOption(contextMenuName, option = ["N/A",function (){}]){
       if(!this.contextMenuList.has(contextMenuName)){
@@ -102,11 +103,19 @@ class _gd_context_menu{
       let xy = this.contextMenuBounding(screenXY);
       this._contextMenuWraper.style.left = xy.x + "px";
       this._contextMenuWraper.style.top = xy.y + "px";
-
-      window.addEventListener("mousedown", this.___windowClick);
+      
+      if(this.autoDismountContextMenu)
+        window.addEventListener("mousedown", this.___windowClick);
+      this.contextMenuMounted = true;
     }
     dismountContextMenu(){
-      document.body.removeChild(this._contextMenuWraper);
+
+      if(this.contextMenuMounted){
+        document.body.removeChild(this._contextMenuWraper);
+        window.removeEventListener("mousedown", this.___windowClick);
+        return;
+      }
+      console.warn("dismountContextMenu: this.contextMenuMounted is no true");
     }
     ///////////////////
     ___windowClick(event){
@@ -114,7 +123,6 @@ class _gd_context_menu{
           return;
         }
       this.dismountContextMenu();
-      window.removeEventListener("mousedown", this.___windowClick);
     }
     //////////////////////
     choseElement(target){
@@ -165,7 +173,7 @@ class _gd_context_menu{
 }
 
 class __context_menu{
-  constructor(name, menuItems = [], _HTMLClassList = []){
+  constructor(name, menuItems = [], _HTMLClassList = [], dismountContextMenu){
 
     this.name = name;
 
@@ -180,7 +188,7 @@ class __context_menu{
     //this.menuItemList = menuItems;
     this.updateUi = true;
 
-    
+    this.dismountContextMenu = dismountContextMenu;
     this._makeUiElement();
     this.addOptions(menuItems);
   }
@@ -217,6 +225,7 @@ class __context_menu{
         
       this.nameList.add(item[0]);
       this.options.set(item[0], {option: new __option(item[0], item[1]), uiMounted: false});
+      this.options.get(item[0]).option.dismountContextMenu = this.dismountContextMenu;
       
       this.optionsToMount.add(item[0]);
       
@@ -277,9 +286,11 @@ class __option{
     this._uiElement = document.createElement("div");
     
     this._uiElement.innerHTML = name;
+    
     this._uiElement.addEventListener("click", (event) => { 
       console.log(this.contextMenuTarget);
       this.clickFunction(this.contextMenuTarget);
+      this.dismountContextMenu();
     });
   }
 }

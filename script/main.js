@@ -4,11 +4,13 @@ document.addEventListener("readystatechange", function(){
 
   if(document.readyState === "complete"){
     loadScript("script/_gd_window.js");
+    loadScript("script/_gd_event.js");
     loadScript("script/_gd_sandbox_file.js");
     loadScript("script/_gd_sandbox_folder.js");
     loadScript("script/_gd_sandbox_project.js");
     loadScript("script/_gd_sandbox_editor.js");
     loadScript("script/_gd_context_menu.js");
+    loadScript("script/_gd_sandbox_viewer.js");
     loadScript({src: "script/gd_SandBox.js", loadFunction: main});
     //console.log("MAIN :" + main);
 
@@ -20,16 +22,12 @@ function main(){
   let viewer = document.createElement("div");
   viewer.className = "LOL";
   console.log("main start");
-  let box = new gd_SandBox({
-    nav: document.querySelector(".gd_sandBox > nav"),
-    header: document.querySelector(".gd_sandBox > header"),
-    editor: document.querySelector(".gd_sandBox > section"),
-    footer: document.querySelector(".gd_sandBox > footer"),
-  }
-  );
-  document.querySelector(".gd_sandBox > section").appendChild(viewer);
+  let box = new gd_SandBox(document.body);
+  document.querySelector(".gd_sandBox").appendChild(viewer);
   
-  //let _win = new _gd_window(viewer,{boundingBlock: document.querySelector(".gd_sandBox > section")});
+  //let _win = new _gd_window(viewer,{boundingBlock: document.querySelector(".gd_sandBox")});
+
+  //let _w2 = new _gd_window(document.querySelector(".gd_sandBox_nav"),{boundingBlock: document.querySelector(".gd_sandBox")});
   box.newProject("Project Gorgon");
 
   box.addFolder("/Project Gorgon","Subjects");
@@ -121,9 +119,9 @@ function ui_file(name){
 
 
 var SCRIPT_LIST = [];
-const DEFAULT_PARAMERTERS_VALUE = {src: "",  loadFunction: undefined, reference_sibling: document.querySelector("script"), append: false, msg: "_"};
+const DEFAULT_PARAMERTERS_VALUE = {src: "",  loadFunction: undefined, reference_sibling: document.querySelector("script"), append: false, msg: "_", isModule: false};
 
-function loadScript(parameters = {src: "",  loadFunction: undefined, reference_sibling: document.querySelector("script"), append: false, msg: "_"}){
+function loadScript(parameters = {src: "",  loadFunction: undefined, reference_sibling: document.querySelector("script"), append: false, msg: "_", isModule: false}){
   //console.log(parameters);
   if( (typeof parameters === "string") ){
     parameters = {src : parameters};
@@ -143,6 +141,9 @@ function loadScript(parameters = {src: "",  loadFunction: undefined, reference_s
 
   let script = document.createElement("script");
   script.src = parameters.src;
+  if(parameters.isModule){
+    script.type = "module";
+  }
   script.addEventListener("load", function(){
     loadScript({msg:"/****/ script has been loaded /****/"});
     console.log("script :  " + this.src + "  load done");

@@ -1,10 +1,9 @@
 'use strict';
 
-
-class _gd_sandbox_file{
+class _gd_sandbox_file extends _gd_event{
     constructor(name, MIME, content, creationDate = Date.now(), lastModified = Date.now(),
     path = "/"){
-        
+        super();
         this.isValid(name, MIME, creationDate, lastModified, path);
         
         this._path = path;
@@ -18,6 +17,8 @@ class _gd_sandbox_file{
         this.editor = null;
 
         this._make_ui_element();
+
+        this.__addEventType("filechange", ["content", "lastModified"]);
     }
 
     set name(name){
@@ -67,6 +68,7 @@ class _gd_sandbox_file{
     set content(value){
         this._content = value;
         this._lastModified = Date.now();
+        this.dispatchEvent("filechange");
     }
     get creationDate(){
         return this._creationDate;

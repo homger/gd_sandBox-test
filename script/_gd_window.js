@@ -79,12 +79,25 @@ class _gd_window{
                 this.setPosition();
             });
             
+            this.htmlBlockElementToMove.addEventListener("scroll",this.scrollFix.bind(this));
+
+            this.observer = new ResizeObserver(() => {this.refreshGeometry()});
+
+            this.observer.observe(this.htmlBlockElementToMove, {box: "border-box"});
+            
             GD_WINDOW_LIST.push(this);
             this.mountControls();
+            
 
-            return this;
+            this.deactivateTransitions();
+            //return this;
     }
 
+    scrollFix(event){
+      
+      this.movingDiv.style.top = this.htmlBlockElementToMove.scrollTop + "px";
+      this.movingDiv.style.left = this.htmlBlockElementToMove.scrollLeft + "px";
+    }
     refreshGeometry(){
         //this.offsetTopLeft = get_offsetXY(this.boundingBlock);
         this.htmlBlockElementToMove_OffsetHeight = this.htmlBlockElementToMove.offsetHeight;

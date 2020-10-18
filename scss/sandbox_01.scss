@@ -6,14 +6,28 @@ html, body{
 *{
   box-sizing: border-box;
 }
-.LOL{
+.gd_sandBox_viewWindow{
   width: 150px;
   height: 150px;
   background-color: white;
   transition-property: width, height, top, left;
-  transition-duration: 5.5s;
+  transition-duration: 0.5s;
   transition-timing-function: ease-out;
+  z-index: 9;
+  resize: both;
+  overflow: auto;
+
+  .gd_viewer{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    //overflow: auto;
+  }
 }
+
+
 .gd_sandBox{
   width: 100%;
   height: 100%;
@@ -207,7 +221,9 @@ html, body{
     }
   }
 }
-
+.gd_sandBox_nav{
+  //z-index: 10;
+}
 .context-menu-wrapper{
   position: fixed;
   top: 0;
@@ -217,6 +233,7 @@ html, body{
   height: auto;
   padding: 0;
   margin: 0;
+  z-index: 10;
   .context-menu{
     display: block;
     position: relative;
@@ -224,7 +241,7 @@ html, body{
     width: 100%;
     background-color: #03dae996;
     border: 1px solid black;
-    z-index: 10;
+    
   
     top: 0;
     left: 0;

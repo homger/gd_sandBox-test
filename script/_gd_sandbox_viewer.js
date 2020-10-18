@@ -16,7 +16,7 @@ function _gd_sandbox_viewer(className, id){
             });
         }
     }
-
+    iframe.sandbox = "allow-scripts";
     iframe.className = className;
     iframe.id = id;
     return iframe;

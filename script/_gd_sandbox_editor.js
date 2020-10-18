@@ -8,7 +8,7 @@ class _gd_sandbox_editor{
         this._textArea.className = "editor";
         this._textArea.addEventListener("keyup", function(){
             this._file.content = this._textArea.value;
-            console.log(this._file.fileData);
+            //console.log(this._file.fileData);
         }.bind(this));
 
         this.uiElement = this._textArea;

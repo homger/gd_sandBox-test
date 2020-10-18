@@ -143,6 +143,11 @@ class _gd_sandbox_folder{
         file.parentFolder = this;
         this._ui_element_updateData();
     }
+    newFile(name, MIME, content){
+      let file = new _gd_sandbox_file(name, MIME, content);
+      this.addFile(file);
+      return file;
+    }
     mergeFolder(folder){
         if(!is_gd_sandbox_folder(folder)){
             throw new Error("folder is not instanceof _gd_sandbox_folder");

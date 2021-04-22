@@ -76,7 +76,7 @@ class gd_SandBox{
       this.viewWindow.className = "gd_sandBox_viewWindow";
 
       this.main.append(this.viewWindow);
-      this.viewWindow_gd_window_object = new _gd_window(this.viewWindow, {boundingBlock: this.main, default_z_index: -1});
+      this.viewWindow_gd_window_object = new _gd_window(this.viewWindow, {defaultPosition:{top: 500, left: 500},boundingBlock: this.main, default_z_index: -1});
       
       this.viewer = _gd_sandbox_viewer("gd_viewer");
       this.viewWindow.append(this.viewer);

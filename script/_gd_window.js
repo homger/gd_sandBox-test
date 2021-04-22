@@ -17,6 +17,10 @@ const DEFAULLT_PARAMETERS = {
     w: "100%",
     h: "100%",
   },
+  defaultPosition: {
+    top: 0,
+    left: 0,
+  },
   controlPanelPadding: true,
 }
 if(document.readyState === "complete"){
@@ -48,7 +52,7 @@ class _gd_window{
             
             //debugger;
             this.initialTop = 0, this.initialLeft = 0;
-            this.top = 0, this.left = 0, this.boundingBlock = this.parameters.boundingBlock, 
+            this.top = this.parameters.defaultPosition.top, this.left = this.parameters.defaultPosition.left, this.boundingBlock = this.parameters.boundingBlock, 
             this.htmlBlockElementToMove = htmlBlockElementToMove, this._size = "mini";
             this.elementValidation(htmlBlockElementToMove);
 
@@ -81,7 +85,7 @@ class _gd_window{
             
             this.htmlBlockElementToMove.addEventListener("scroll",this.scrollFix.bind(this));
 
-            this.observer = new ResizeObserver(() => {this.refreshGeometry()});
+            this.observer = new ResizeObserver(this.refreshGeometry);
 
             this.observer.observe(this.htmlBlockElementToMove, {box: "border-box"});
             

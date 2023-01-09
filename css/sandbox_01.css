@@ -199,6 +199,9 @@ html, body {
   background-color: #a6f5ff;
 }
 
+/*.gd_sandBox_nav{
+  //z-index: 10;
+}*/
 .context-menu-wrapper {
   position: fixed;
   top: 0;

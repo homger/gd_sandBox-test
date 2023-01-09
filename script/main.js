@@ -41,7 +41,7 @@ function main(){
   box.addFolder("/Project Gorgon/Subjects/pan/pate/cathegories","Gas");
   box.addFile("/Project Gorgon/Subjects/pan/pate/cathegories/Gas",new _gd_sandbox_file("Efect of gas type pate", "text/plain","The effects of the Gas type pate are so horendous that i dare not describe them in this document. Sowwy :("));
   box.addFile("/Project Gorgon/Subjects/pan/pate/cathegories",new _gd_sandbox_file("read me", "text/plain","Good job."));
-  box.addFile("/Project Gorgon",new _gd_sandbox_file("test", "text/plain","Mad lad"));
+  box.addFile("/Project Gorgon",new _gd_sandbox_file("test", "text/plain","Mad lad \n pap"));
   
   let Tete = box.newProject("Tete");
   let test1 = box.addFolder("/Tete","test1");

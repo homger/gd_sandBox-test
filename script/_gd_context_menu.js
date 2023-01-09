@@ -20,7 +20,7 @@ class _gd_context_menu{
       this.menuList = new Map();
       this._HTMLClassList = new Map();
       this.contextMenuList = new Map();
-      this.contextMenuCall = this.contextMenuCall.bind(this)
+      this.contextMenuCall = this.contextMenuCall.bind(this);
       this.___windowClick = this.___windowClick.bind(this);
       this.scope.addEventListener("contextmenu", this.contextMenuCall);
 

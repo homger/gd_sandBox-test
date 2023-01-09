@@ -90,20 +90,26 @@ const vrCursor = {
     left : function(){
         if(this.index > 0){
             --this.index;
+            return true;
         }
         else if(this.line > 0){
             --this.line;
             this.index = this.sloted_gd_sandbox_editor.current_line.length;
+            return true;
         }
+        return false;
     },
     right : function(){
         if(this.sloted_gd_sandbox_editor.current_line.length > this.index){
             ++this.index;
+            return true;
         }
         else if(this.line < this.sloted_gd_sandbox_editor.lineCount - 1){
             ++this.line;
             this.index = 0;
+            return true;
         }
+        return false;
     },
     home : function(){ 
         this.index = 0;
@@ -740,6 +746,12 @@ class _gd_sandbox_editor{
 
         this.addKeyAction("Tab", {printKey: true, printValue: "  "});
         this.addKeyAction("Backspace", {specialAction: true, specialFunction: this.backspace.bind(this)});
+        this.addKeyAction("Delete", {specialAction: true, specialFunction: function(){
+            if(vrCursor.right()){
+                this.backspace();
+            }
+        }.bind(this)});
+
         this.addKeyAction("{", {
             printKey: true, printValue: "{}",
             wrapText: true, beforeWrapValue:"{", afterWrapValue:"}",

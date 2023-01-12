@@ -3,6 +3,7 @@
 document.addEventListener("readystatechange", function(){
 
   if(document.readyState === "complete"){
+    loadScript("script/_gd_console.js");
     loadScript("script/_gd_window.js");
     loadScript("script/_gd_event.js");
     loadScript("script/_gd_sandbox_file.js");

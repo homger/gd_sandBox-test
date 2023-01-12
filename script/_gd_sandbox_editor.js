@@ -1,5 +1,6 @@
 'use strict';
 
+/*
 const vrCursor = {
     sloted_gd_sandbox_editor : {},
     editor_slothed : false,
@@ -121,7 +122,159 @@ const vrCursor = {
 }
 vrCursor.updateFrom = vrCursor.updateFrom.bind(vrCursor);
 vrCursor.update = vrCursor.update.bind(vrCursor);
+*/
 
+class vrCursor{
+    constructor(editor){
+        this._gd_sandbox_editor = editor;
+        this.editor_slothed = true;
+        this.line = 0;
+        this.index = 0;
+        this._lineOffset = 0;
+        this._indexOffset = 0;
+    }
+    /*slothEditor(editor){
+        if(editor instanceof _gd_sandbox_editor){
+            if(this.editor_slothed){
+                this.sloted_gd_sandbox_editor.slothed_in_vrCursor = false;   
+            }
+            this.sloted_gd_sandbox_editor = editor;
+            this.editor_slothed = true;
+            this.sloted_gd_sandbox_editor.slothed_in_vrCursor = true;
+        }
+        else{
+            console.warn("editor instanceof _gd_sandbox_editor  == false");
+        }
+    }*/
+    _apply_lineOffset(){
+        this.moveLineX(this._lineOffset);
+        this._lineOffset = 0;
+    }
+    _apply_indexOffset(){
+        this.moveIndeX(this._indexOffset);
+        this._indexOffset = 0;
+    }
+    moveIndeX(x){
+        if(x < 0){
+            for(let i = 0; i > x; --i){
+                this.left();
+            }
+        }
+        else{
+            for(let i = 0; i < x; ++i){
+                this.right();
+            }
+        }
+    }
+    moveLineX(x){
+        if(x < 0){
+            for(let i = 0; i > x; --i){
+                this.up();
+            }
+        }
+        else{
+            for(let i = 0; i < x; ++i){
+                this.down();
+            }
+        }
+    }
+    applyOffset(){
+        this._apply_lineOffset();
+        this._apply_indexOffset();
+    }
+    reset(){
+        /*if(editor !== this._gd_sandbox_editor){
+            throw new Error("editor !== this.sloted_gd_sandbox_editor");
+            return;
+        }*/
+        this.line = 0;
+        this.index = 0;
+        this._lineOffset = 0;
+        this._indexOffset = 0;
+    }
+    updateFrom (from){
+        switch(from){
+            case "anchor_selection":
+                let currentSelection = window.getSelection();
+                let valid_anchor = getValidParent(currentSelection.anchorNode);
+                this.line = !isNaN(valid_anchor._line_number)?  valid_anchor._line_number : this.line;
+                this.index = currentSelection.anchorOffset;
+                console.log("line :  " + this.line + "       index :  " + this.index);
+                break;
+            case "filteredSelector":
+                
+                this._gd_sandbox_editor.__filteredSelectorObjectUpToDate = false;
+                this.line = this._gd_sandbox_editor.filteredSelector().startLine;
+                this.index = this._gd_sandbox_editor.filteredSelector().startIndex;
+                console.log("line :  " + this.line + "       index :  " + this.index);
+                break;
+            case "previousData":
+                
+                this.line = this._gd_sandbox_editor.lineBeforUnslot;
+                this.index = this._gd_sandbox_editor.indexBeforUnslot;
+                console.log("line :  " + this.line + "       index :  " + this.index);
+            default: return;
+        }
+    }
+    update (element){
+        switch(element){
+            case "index":
+                this.index = currentSelection.anchorOffset;
+                break;
+            case "carret":
+                this._gd_sandbox_editor.__updateCursorPosition();
+                break;
+            default: return;
+        }
+    }
+    up (){
+        if(this.line > 0){
+            --this.line;
+            if(this.index > this._gd_sandbox_editor.current_line.length - 1){
+                this.index = this._gd_sandbox_editor.current_line.length;
+            }
+        }
+    }
+    down(){
+        if(this._gd_sandbox_editor.lineCount > this.line + 1){
+            ++this.line;
+            if(this.index > this._gd_sandbox_editor.current_line.length - 1){ //??
+                this.index = this._gd_sandbox_editor.current_line.length;
+            }
+        }
+    }
+    left(){
+        if(this.index > 0){
+            --this.index;
+            return true;
+        }
+        else if(this.line > 0){
+            --this.line;
+            this.index = this._gd_sandbox_editor.current_line.length;
+            return true;
+        }
+        return false;
+    }
+    right(){
+        if(this._gd_sandbox_editor.current_line.length > this.index){
+            ++this.index;
+            return true;
+        }
+        else if(this.line < this._gd_sandbox_editor.lineCount - 1){
+            ++this.line;
+            this.index = 0;
+            return true;
+        }
+        return false;
+    }
+    home(){ 
+        this.index = 0;
+    }
+    end(){ 
+        this.index = this._gd_sandbox_editor.current_line.length;
+    }
+
+}
 
 //@GDn&p+gbg
 class _gd_sandbox_editor{
@@ -134,9 +287,10 @@ class _gd_sandbox_editor{
         this._editor._gdm_editor = true;
 
         this.slothed_in_vrCursor = false;
-        vrCursor.slothEditor(this);
-        vrCursor.reset(this);
-        this.getVrCursor = this.__vrCursor;
+        this.vrCursor = new vrCursor(this);
+        //vrCursor.slothEditor(this);
+        this.vrCursor.reset();
+        //this.getVrCursor = this.__vrCursor;
         this.vrCursorSetup();
         
         this.keyAction = this.keyAction.bind(this);
@@ -179,9 +333,9 @@ class _gd_sandbox_editor{
         
     }
 
-    get __vrCursor(){
+    /*get __vrCursor(){
         return vrCursor;
-    }
+    }*/
     vrCursorSetup(){
         this.indexBeforUnslot = 0;
         this.lineBeforUnslot = 0;
@@ -192,17 +346,17 @@ class _gd_sandbox_editor{
             this.focusedLine = 0;
         }
 
-        vrCursor.slothEditor(this);
-        vrCursor.updateFrom("previousData");
+        //vrCursor.slothEditor(this);
+        //vrCursor.updateFrom("previousData");
         this.hasFocus = true;
     }
     onFocusout(){
-        this.indexBeforUnslot = vrCursor.index;
-        this.lineBeforUnslot = vrCursor.line;
+        /*this.indexBeforUnslot = vrCursor.index;
+        this.lineBeforUnslot = vrCursor.line;*/
         this.hasFocus = false;
     }
     click(){
-        vrCursor.updateFrom("anchor_selection");
+        this.vrCursor.updateFrom("anchor_selection");
     }
     get cursorIndex(){
         return this._getSelector().anchorOffset == this._getSelector().focusOffset ? this._getSelector().focusOffset : undefined;
@@ -301,7 +455,7 @@ class _gd_sandbox_editor{
             console.warn("index is negative :  " + index);
             return;
         }
-        vrCursor.line = index;
+        this.vrCursor.line = index;
 
         this.setCursorPosition(this._lineArray[index].uiElement, 0);
     }
@@ -385,7 +539,9 @@ class _gd_sandbox_editor{
         }
     }
     parseFile(){
-
+        if(this.file.content == undefined){
+            this.file.content = "";
+        }
         let dataString = this.split_string_by_line_break(this._file._content);
 
         dataString.forEach(string => console.log("'" + string + "'"));
@@ -520,7 +676,7 @@ class _gd_sandbox_editor{
         }
         console.log();
     }
-    __print(printValue, cursorOffset = 0, index = vrCursor.index, line = vrCursor.line){
+    __print(printValue, cursorOffset = 0, index = this.vrCursor.index, line = this.vrCursor.line){
         console.log(line);
         /*if(line === undefined){
             line = this.anchorNode._line_number;
@@ -528,26 +684,26 @@ class _gd_sandbox_editor{
         this._lineArray[line].insertString(printValue,index);
         index += printValue.length;
         //debugger;
-        vrCursor.line = line;
-        vrCursor.index = index;
+        this.vrCursor.line = line;
+        this.vrCursor.index = index;
 
-        vrCursor.update("carret");
+        this.vrCursor.update("carret");
         //this.setCursorPosition(this._lineArray[line].uiElement, index);
     }
     get current_line(){
-        return this._lineArray[vrCursor.line];
+        return this._lineArray[this.vrCursor.line];
     }
-    __print_brut(printValue, index = vrCursor.index, line = vrCursor.line){
+    __print_brut(printValue, index = this.vrCursor.index, line = this.vrCursor.line){
         console.log(line);
         /*if(line === undefined){
             line = this.anchorNode._line_number;
         }*/
         this._lineArray[line].insertBrutContent(printValue,index);
-        ++vrCursor.index;
+        ++this.vrCursor.index;
         this.setCursorPosition(this._lineArray[line].uiElement, index);
     }
     __updateCursorPosition(){
-        this.setCursorPosition(this._lineArray[vrCursor.line].uiElement, vrCursor.index);
+        this.setCursorPosition(this._lineArray[this.vrCursor.line].uiElement, this.vrCursor.index);
     }
     backspace(){
         if(this.filteredSelector().selection){
@@ -555,16 +711,16 @@ class _gd_sandbox_editor{
             
         }
         else{
-            if(vrCursor.index > 0){
-                --vrCursor.index;
-                this._lineArray[vrCursor.line].backspace(vrCursor.index);
-                this.setCursorPosition(this._lineArray[vrCursor.line].uiElement, vrCursor.index);
+            if(this.vrCursor.index > 0){
+                --this.vrCursor.index;
+                this._lineArray[this.vrCursor.line].backspace(this.vrCursor.index);
+                this.setCursorPosition(this._lineArray[this.vrCursor.line].uiElement, this.vrCursor.index);
             }
-            else if(vrCursor.index == 0 && vrCursor.line > 0){
-                vrCursor.left();
-                this._lineArray[vrCursor.line].appendLine(this._lineArray[vrCursor.line + 1]);
-                this.deleteLine(vrCursor.line + 1);
-                this.setCursorPosition(this._lineArray[vrCursor.line].uiElement, vrCursor.index);
+            else if(this.vrCursor.index == 0 && this.vrCursor.line > 0){
+                this.vrCursor.left();
+                this._lineArray[this.vrCursor.line].appendLine(this._lineArray[this.vrCursor.line + 1]);
+                this.deleteLine(this.vrCursor.line + 1);
+                this.setCursorPosition(this._lineArray[this.vrCursor.line].uiElement, this.vrCursor.index);
             }
             
             //--vrCursor.index
@@ -572,26 +728,26 @@ class _gd_sandbox_editor{
         this.__filteredSelectorObjectUpToDate = false;
     }
     moveCursorLeft(x){
-        if(x > vrCursor.index){
-            x -= vrCursor.index;
+        if(x > this.vrCursor.index){
+            x -= this.vrCursor.index;
             //vrCursor.line
         }
-        this.setCursorPosition(this._lineArray[vrCursor.line].uiElement, vrCursor.index);
+        this.setCursorPosition(this._lineArray[this.vrCursor.line].uiElement, this.vrCursor.index);
     }
     ArrowLeft(){
-        vrCursor.left();
+        this.vrCursor.left();
         this.__updateCursorPosition();
     }
     ArrowRight(){
-        vrCursor.right();
+        this.vrCursor.right();
         this.__updateCursorPosition();
     }
     ArrowUp(){
-        vrCursor.up();
+        this.vrCursor.up();
         this.__updateCursorPosition();
     }
     ArrowDown(){
-        vrCursor.down();
+        this.vrCursor.down();
         this.__updateCursorPosition();
     }
     selectAll(){
@@ -654,6 +810,7 @@ class _gd_sandbox_editor{
         
         this.addCombination_Starter_Keys("Control");
         this.addCombination_Starter_Keys("Alt");
+        this.addCombination_Starter_Keys("AltGraph");
         //this.addCombination_Starter_Keys("Shift");
 
         this.addKeyCombination(["Alt","p"], function(){alert("Alt ! ");}.bind(this));
@@ -663,6 +820,10 @@ class _gd_sandbox_editor{
         this.addKeyCombination(["Control","a"], this.selectAll.bind(this));
         this.addKeyCombination(["Control","c"]);
         this.addKeyCombination(["Control","v"]);
+        /*this.addKeyCombination(["AltGraph","{"]);
+        this.addKeyCombination(["AltGraph","}"]);
+        this.addKeyCombination(["Control", "Alt","{"]);
+        this.addKeyCombination(["Control", "Alt","}"]);*/
         //this.addKeyCombination(["Control","c"]);
         //this.addKeyCombination( function(){this.__print("Super combination");}.bind(this) , "Control","Alt","t","x"); Does not work. Will not make it work
 
@@ -722,6 +883,7 @@ class _gd_sandbox_editor{
 
         this.addKeyActionException("F5");
         this.addKeyActionException("F12");
+        //this.addKeyActionException("AltGraph");
         
 
     }
@@ -740,14 +902,14 @@ class _gd_sandbox_editor{
         this.addKeyAction("ArrowRight", {specialAction: true, specialFunction: this.ArrowRight.bind(this)});
         this.addKeyAction("ArrowUp", {specialAction: true, specialFunction: this.ArrowUp.bind(this)});
         this.addKeyAction("ArrowDown", {specialAction: true, specialFunction: this.ArrowDown.bind(this)});
-        this.addKeyAction("Home", {specialAction: true, specialFunction: function(){ vrCursor.home(); vrCursor.update("carret"); }.bind(this)});
-        this.addKeyAction("End", {specialAction: true, specialFunction: function(){ vrCursor.end(); vrCursor.update("carret"); }.bind(this)});
+        this.addKeyAction("Home", {specialAction: true, specialFunction: function(){ this.vrCursor.home(); this.vrCursor.update("carret"); }.bind(this)});
+        this.addKeyAction("End", {specialAction: true, specialFunction: function(){ this.vrCursor.end(); this.vrCursor.update("carret"); }.bind(this)});
 
 
         this.addKeyAction("Tab", {printKey: true, printValue: "  "});
         this.addKeyAction("Backspace", {specialAction: true, specialFunction: this.backspace.bind(this)});
         this.addKeyAction("Delete", {specialAction: true, specialFunction: function(){
-            if(vrCursor.right()){
+            if(this.vrCursor.right()){
                 this.backspace();
             }
         }.bind(this)});
@@ -767,7 +929,7 @@ class _gd_sandbox_editor{
             wrapText: true, beforeWrapValue:"(", afterWrapValue:")",
             cursorOffset: -1});
         //this.addKeyAction("Backspace", {specialAction: true, specialFunction: function(textArea){}});
-        this.addKeyAction("Enter", {specialAction: true, specialFunction: () => {this.splitLine(); vrCursor.down(); vrCursor.home(); vrCursor.update("carret");}});
+        this.addKeyAction("Enter", {specialAction: true, specialFunction: () => {this.splitLine(); this.vrCursor.down(); this.vrCursor.home(); this.vrCursor.update("carret");}});
         this.addKeyAction("²", {
             printKey: true, printValue: "<special></special>", printBrut: true,
             wrapText: true, beforeWrapValue:"<special>", afterWrapValue:"</special>",
@@ -784,62 +946,24 @@ class _gd_sandbox_editor{
     }
 
     classicKeyAction(keyboardEvent){
-            
+        
         _slot_keyAction_call();
 
         
-        //debugger;
+        
         let key = this.keyActionMap.get(keyboardEvent.key);
-        console.log("VR C INDEX BEFORE UPDATE: " + vrCursor.index);
+        console.log("VR C INDEX BEFORE UPDATE: " + this.vrCursor.index);
         //keyboardEvent.preventDefault();
         if(key){
+
             if(key.keyCombination){
+                //debugger;
                 this.genericKeyAction = this.keyCombinationKeyAction.bind(this);
                 this.combination_Starter_Keys.set(keyboardEvent.key, {down: true});   
                 ++this.combination_Starter_Keys_down_count;
             }
-            else if(this.selectionActive){
-                if(key.wrapText){
-                    keyboardEvent.preventDefault();
-                    if(key.printBrut){
-                        this.__wrapSelection_brut(this._getSelector(), key.beforeWrapValue, key.afterWrapValue);
-                    }
-                    else{
-                        this.__wrapSelection(this.filteredSelector(), key.beforeWrapValue, key.afterWrapValue);
-                    }
-                    
-                }
-                else if(key.printKey){
-                    keyboardEvent.preventDefault();
-                    this.deleteSelection();
-                    if(key.printBrut){
-                        this.__print_brut(key.printValue);
-                    }
-                    else{
-                        this.__print(key.printValue);
-                    }
-                    
-                }
-                else if(key.specialAction){
-                    keyboardEvent.preventDefault();
-                    key.specialFunction();
-                }
-            }
-            else if(key.printKey){
-                keyboardEvent.preventDefault();
-                //debugger;
-                if(key.cursorOffset){
-                    this.__print(key.printValue, key.cursorOffset);
-                }
-                else{
-                    this.__print(key.printValue);
-                }
-            }
-            else if(key.specialAction){
-                keyboardEvent.preventDefault();
-                key.specialFunction();
-
-            }
+            else
+             this.classicKeyAction_SubFunction(key, keyboardEvent);
         }
         else if(keyboardEvent.key.length == 1 && keyboardEvent.key.search(VALID_BASIC_TEXT_DATA_VALUES__AS_REGXP) == 0){
             keyboardEvent.preventDefault();
@@ -854,15 +978,67 @@ class _gd_sandbox_editor{
         //vrCursor.updateFrom("anchor_selection");
 
         
-
-        _slot_keyAction_add(vrCursor.updateFrom, "anchor_selection");
+        
+        
+        _slot_keyAction_add(this.vrCursor.updateFrom, "anchor_selection");
         
         this.__filteredSelectorObjectUpToDate = false;
         //alert(keyboardEvent.key);*/
 
         this.file.content = this.getDataAsString();
     }
+
+    //Don't know how to name it, making this to not replicate code inside keyCombinationKeyAction();
+    classicKeyAction_SubFunction(key, keyboardEvent){
+        if(this.selectionActive){
+            if(key.wrapText){
+                keyboardEvent.preventDefault();
+                if(key.printBrut){
+                    this.__wrapSelection_brut(this._getSelector(), key.beforeWrapValue, key.afterWrapValue);
+                }
+                else{
+                    this.__wrapSelection(this.filteredSelector(), key.beforeWrapValue, key.afterWrapValue);
+                }
+                
+            }
+            else if(key.printKey){
+                keyboardEvent.preventDefault();
+                this.deleteSelection();
+                if(key.printBrut){
+                    this.__print_brut(key.printValue);
+                }
+                else{
+                    this.__print(key.printValue);
+                }
+                
+            }
+            else if(key.specialAction){
+                keyboardEvent.preventDefault();
+                key.specialFunction();
+            }
+        }
+        else if(key.printKey){
+            keyboardEvent.preventDefault();
+            //debugger;
+            if(key.cursorOffset){
+                this.__print(key.printValue);
+                this.vrCursor._indexOffset += key.cursorOffset;
+                this.vrCursor.applyOffset();
+                this.vrCursor.update("carret");
+            }
+            else{
+                this.__print(key.printValue);
+            }
+        }
+        else if(key.specialAction){
+            keyboardEvent.preventDefault();
+            key.specialFunction();
+
+        }
+    }
+    
     keyCombinationKeyAction(keyboardEvent){
+        //debugger;
         if(keyboardEvent.repeat){
             keyboardEvent.preventDefault();
             return;
@@ -890,6 +1066,10 @@ class _gd_sandbox_editor{
             else{
                 this.combinationActionPending = false;
             }
+        }
+        let key = this.keyActionMap.get(keyboardEvent.key);
+        if(key){
+            this.classicKeyAction_SubFunction(key, keyboardEvent);
         }
         keyboardEvent.preventDefault();
         console.log("this.combination_Starter_Keys_down_count : " + this.combination_Starter_Keys_down_count);
@@ -964,7 +1144,7 @@ class _gd_sandbox_editor{
         //this.updateUi();
     }
     //splitLine(splitIndex = this.filteredSelector().startIndex, lineNumber = this.filteredSelector().startLine){
-    splitLine(splitIndex = vrCursor.index, lineNumber = vrCursor.line){
+    splitLine(splitIndex = this.vrCursor.index, lineNumber = this.vrCursor.line){
         if(lineNumber < 0 || lineNumber >= this.lineCount)
             throw new Error("index < 0 || index >= this.lineCount");
         
@@ -975,7 +1155,7 @@ class _gd_sandbox_editor{
         
     }
     //insertLine(line = new _line(""), index = this.filteredSelector().startLine){
-    insertLine(line = new _line(""), index = vrCursor.line){
+    insertLine(line = new _line(""), index = this.vrCursor.line){
         // alert(); 
         //debugger;
         if(index < 0 || index >= this.lineCount)
@@ -1108,10 +1288,10 @@ class _gd_sandbox_editor{
             this._lineArray[startLine].deleteFromTo(startIndex, endIndex);
         }
         if(ajustCursor){
-            vrCursor.line = startLine;
-            vrCursor.index = startIndex;
+            this.vrCursor.line = startLine;
+            this.vrCursor.index = startIndex;
 
-            vrCursor.update("carret");
+            this.vrCursor.update("carret");
         }
         this.__filteredSelectorObjectUpToDate = false;
     }
@@ -1186,13 +1366,13 @@ class _gd_sandbox_editor{
                 //this.insertLine(new _line(pasteDataArray[i]));
                 if(i > 0){
                     this.splitLine();
-                    vrCursor.down();
-                    vrCursor.home();
+                    this.vrCursor.down();
+                    this.vrCursor.home();
                 } 
                 this.__print(pasteDataArray[i]);
             }
         
-            vrCursor.update("carret");
+            this.vrCursor.update("carret");
         }
         //this.insertLine(new _line(pasteData));
     }

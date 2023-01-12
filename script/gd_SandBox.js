@@ -1,4 +1,5 @@
 'use strict';
+let _LOG;
 
 const PARAMETERS_DEFAULT_VALUE = {
   nav: null,
@@ -49,6 +50,7 @@ class gd_SandBox{
       this.clickSetup();
       this.dblclickSetup();
       this.editorSetup();
+      this.consoleSetup();
     }
     buildUi(){
 
@@ -372,6 +374,21 @@ class gd_SandBox{
       this.selectedFile = file;
       this.selectedFile.editor.uiElement.style.zIndex = "1";
       //toggleClass(this.editorSelectorList.get(this.selectedFile), "seleted");
+    }
+
+
+
+    //Experimenting with the console
+
+    consoleSetup(){
+      this._console = new _gd_console(this.footer);
+      this.log("Hello world");
+      this.log("Huh??!!");
+
+      _LOG = this.log();
+    }
+    log(data){
+      testConole(this._console, data);
     }
     
 }

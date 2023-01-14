@@ -914,6 +914,11 @@ class _gd_sandbox_editor{
             }
         }.bind(this)});
 
+        
+        this.addKeyAction("<", {
+            printKey: true, printValue: "<></>",
+            cursorOffset: -4
+        });
         this.addKeyAction("{", {
             printKey: true, printValue: "{}",
             wrapText: true, beforeWrapValue:"{", afterWrapValue:"}",
@@ -1009,6 +1014,9 @@ class _gd_sandbox_editor{
                 }
                 else{
                     this.__print(key.printValue);
+                    this.vrCursor._indexOffset += key.cursorOffset;
+                    this.vrCursor.applyOffset();
+                    this.vrCursor.update("carret");
                 }
                 
             }

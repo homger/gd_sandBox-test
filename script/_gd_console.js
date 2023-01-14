@@ -6,7 +6,9 @@ class _gd_console{
     }
 
     print(data){
-        this.container.append(document.createElement("div").innerHTML = data);
+        let newPrintOut = document.createElement("div");
+        newPrintOut.innerHTML = data;
+        this.container.append(newPrintOut);
     }
 }
 
@@ -15,3 +17,4 @@ function testConole (output, ...dataArray){
         output.print(data);
     })
 }
+

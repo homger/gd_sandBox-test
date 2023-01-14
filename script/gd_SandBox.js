@@ -1,6 +1,7 @@
 'use strict';
 let _LOG;
 
+
 const PARAMETERS_DEFAULT_VALUE = {
   nav: null,
   header: null,
@@ -29,6 +30,7 @@ class gd_SandBox{
         this.globalClassNameList = new Set();
 
         
+        window._gd_SandBox = {};
         this.initialSetUp();
         
         
@@ -80,7 +82,7 @@ class gd_SandBox{
       this.main.append(this.viewWindow);
       this.viewWindow_gd_window_object = new _gd_window(this.viewWindow, {defaultPosition:{top: 500, left: 500},boundingBlock: this.main, default_z_index: -1});
       
-      this.viewer = _gd_sandbox_viewer("gd_viewer");
+      this.viewer = _gd_sandbox_viewer("gd_viewer", "a1", this.log.bind(this));
       this.viewWindow.append(this.viewer);
       
     }
@@ -306,7 +308,9 @@ class gd_SandBox{
 
     test(fileEvent){
       console.log("FILE EVENT TEST");
-      this.viewer.setDocument(fileEvent.content);
+      this.viewer.setDocument("<script>window.console.log = window.parent._gd_SandBox.console.log;</script>" + fileEvent.content);
+      
+      this.viewer.contentDocument.console = this.log.bind(this);
     }
 
     closeFile(file){
@@ -382,13 +386,24 @@ class gd_SandBox{
 
     consoleSetup(){
       this._console = new _gd_console(this.footer);
-      this.log("Hello world");
-      this.log("Huh??!!");
+      /*this.log("Hello world");
+      this.log("Huh??!!");*/
 
-      _LOG = this.log();
+      _LOG = this.log;
+      //__console = console.log;
+      //console.log = this.log;
+      window.__gd_log = this.log.bind(this);
+      //window.parent.__gd_log("hello");
+
+      this.viewer.assingConsole(this.log.bind(this));
+      window._gd_SandBox.console = {};
+      window._gd_SandBox.console.log = this.log.bind(this);
+      //this.viewer.contentWindow.console.log = this.log.bind(this);
+      //<script>document.console("t2");</script>
     }
-    log(data){
-      testConole(this._console, data);
+    log(...data){
+      //debugger;
+      testConole(this._console, ...data);
     }
     
 }

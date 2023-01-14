@@ -3,7 +3,7 @@
 
 
 
-function _gd_sandbox_viewer(className, id){
+function _gd_sandbox_viewer(className, id, log, _console){
     let iframe = document.createElement("iframe");
     iframe.setDocument = function(content = ""){
         console.log(typeof this.srcdoc);
@@ -12,13 +12,17 @@ function _gd_sandbox_viewer(className, id){
         }
         else{
             this.addEventListener("load", function({target: iframe}){
-                this.contentDocument.documentElement.innerHTML = content;
+                this.contentDocument.documentElement.body.innerHTML = content;
             });
         }
     }
-    iframe.sandbox = "allow-scripts";
+    iframe.sandbox = "allow-scripts allow-same-origin";
     iframe.className = className;
     iframe.id = id;
+    //iframe.contentWindow.console.log = log;
+    iframe.assingConsole = function(_console){
+        //this.contentWindow.parent.
+    }
     return iframe;
 }
 

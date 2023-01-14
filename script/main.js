@@ -1,18 +1,19 @@
 'use strict'
-
 document.addEventListener("readystatechange", function(){
 
   if(document.readyState === "complete"){
-    loadScript("script/_gd_console.js");
-    loadScript("script/_gd_window.js");
-    loadScript("script/_gd_event.js");
-    loadScript("script/_gd_sandbox_file.js");
-    loadScript("script/_gd_sandbox_folder.js");
-    loadScript("script/_gd_sandbox_project.js");
-    loadScript("script/_gd_sandbox_editor.js");
-    loadScript("script/_gd_context_menu.js");
-    loadScript("script/_gd_sandbox_viewer.js");
-    loadScript({src: "script/gd_SandBox.js", loadFunction: main});
+    let rdata = Math.random() * 100000;
+    
+    loadScript("script/_gd_console.js?v=" + rdata);
+    loadScript("script/_gd_window.js?v=" + rdata);
+    loadScript("script/_gd_event.js?v=" + rdata);
+    loadScript("script/_gd_sandbox_file.js?v=" + rdata);
+    loadScript("script/_gd_sandbox_folder.js?v=" + rdata);
+    loadScript("script/_gd_sandbox_project.js?v=" + rdata);
+    loadScript("script/_gd_sandbox_editor.js?v=" + rdata);
+    loadScript("script/_gd_context_menu.js?v=" + rdata);
+    loadScript("script/_gd_sandbox_viewer.js?v=" + rdata);
+    loadScript({src: "script/gd_SandBox.js?v=" + rdata, loadFunction: main});
     //console.log("MAIN :" + main);
 
   }

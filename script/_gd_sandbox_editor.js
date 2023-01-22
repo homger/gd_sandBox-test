@@ -919,11 +919,11 @@ class _gd_sandbox_editor{
             printKey: true, printValue: "<></>",
             cursorOffset: -4
         });
-        this.addKeyAction("{", {
+        /*this.addKeyAction("{", {
             printKey: true, printValue: "{}",
             wrapText: true, beforeWrapValue:"{", afterWrapValue:"}",
             cursorOffset: -1
-        });
+        });*/
         this.addKeyAction("\"", {
             printKey: true, printValue: "\"\"",
             wrapText: true, beforeWrapValue:"\"", afterWrapValue:"\"",
@@ -995,6 +995,7 @@ class _gd_sandbox_editor{
 
     //Don't know how to name it, making this to not replicate code inside keyCombinationKeyAction();
     classicKeyAction_SubFunction(key, keyboardEvent){
+        console.log(keyboardEvent.key);
         if(this.selectionActive){
             if(key.wrapText){
                 keyboardEvent.preventDefault();
@@ -1043,6 +1044,13 @@ class _gd_sandbox_editor{
             key.specialFunction();
 
         }
+        else if(keyboardEvent.key.length == 1 && keyboardEvent.key.search(VALID_BASIC_TEXT_DATA_VALUES__AS_REGXP) == 0){
+            keyboardEvent.preventDefault();
+            this.deleteSelection();
+            //debugger;
+            this.__print(keyboardEvent.key);
+            console.log("to basic data:  " + keyboardEvent.key);
+        }
     }
     
     keyCombinationKeyAction(keyboardEvent){
@@ -1076,9 +1084,9 @@ class _gd_sandbox_editor{
             }
         }
         let key = this.keyActionMap.get(keyboardEvent.key);
-        if(key){
-            this.classicKeyAction_SubFunction(key, keyboardEvent);
-        }
+        
+        this.classicKeyAction_SubFunction(key, keyboardEvent);
+        
         keyboardEvent.preventDefault();
         console.log("this.combination_Starter_Keys_down_count : " + this.combination_Starter_Keys_down_count);
         //this.__filteredSelectorObjectUpToDate = false;

@@ -16,6 +16,9 @@ class _gd_sandbox_file extends _gd_event{
         this._open = false;
         this.editor = null;
 
+        this._url = undefined;
+        this._js_file = undefined;
+
         this._make_ui_element();
 
         this.__addEventType("filechange", ["content", "lastModified"]);
@@ -132,6 +135,32 @@ class _gd_sandbox_file extends _gd_event{
       }
       this.uiElement.parentNode.removeChild(this.uiElement);
       console.log( this.name + "UI ROMVED");
+    }
+    js_File(){
+        this._js_file = new File([this.content], this.name, {
+            type: this._MIME,
+            lastModified: this._lastModified,
+        });
+        return this._js_file; 
+    }
+    url(){
+        if(this._url !== undefined){
+            URL.revokeObjectURL(this._url);
+            this._url = URL.createObjectURL(this.js_File());
+        }
+        else{
+            this._url = URL.createObjectURL(this.js_File());
+        }
+        return this._url;
+    }
+    is_js_workerFile(){
+        return undefined;
+    }
+    worker(){
+        return new Worker(this.url(), {
+            name: this.name,
+            credentials: "same-origin",
+        })
     }
 }
 function _fileFromFileData(file){

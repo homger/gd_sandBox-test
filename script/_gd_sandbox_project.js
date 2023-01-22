@@ -54,6 +54,10 @@ class _gd_sandbox_project{
     __uiSetupAddFolder(master, folder){
 
     }
+
+    get path(){
+      return this.projectFolder.fullName;
+    }
 }
 
 //FOR IE

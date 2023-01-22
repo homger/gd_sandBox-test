@@ -4,10 +4,12 @@ document.addEventListener("readystatechange", function(){
   if(document.readyState === "complete"){
     let rdata = Math.random() * 100000;
     
+    
     loadScript("script/_gd_console.js?v=" + rdata);
     loadScript("script/_gd_window.js?v=" + rdata);
     loadScript("script/_gd_event.js?v=" + rdata);
     loadScript("script/_gd_sandbox_file.js?v=" + rdata);
+    loadScript("script/_gd_sandbox_TEXT_PROCESSING.js?v=" + rdata);
     loadScript("script/_gd_sandbox_folder.js?v=" + rdata);
     loadScript("script/_gd_sandbox_project.js?v=" + rdata);
     loadScript("script/_gd_sandbox_editor.js?v=" + rdata);
@@ -57,6 +59,37 @@ function main(){
   test1.mergeFolder(test2);
   Tete.projectFolder.removeChildFoler("test2");
 
+  let txt_psp = box.newProject("Project for text processing");
+  //txt_psp.addFile()
+  box.addFile(txt_psp.path, new _gd_sandbox_file("script", "text/javascript",`
+
+  var y = 0;
+  document.addEventListener("readystatechange", function(){
+
+    if(document.readyState === "complete"){
+      let b1 = document.getElementById("b1");
+      b1.onclick = () => {
+        b1.innerHTML = y;
+        ++y;
+      }
+    }
+  });
+  `));
+  box.addFile(txt_psp.path, new _gd_sandbox_file("style", "text/css",`
+  html, body{
+    height: 100%;
+    margin: 0;
+  }
+  #b1{
+    width: 30%;
+    height: 30px;
+    background-color: rgb(56, 176, 197);
+  }
+  `));
+  box.addFile(txt_psp.path, new _gd_sandbox_file("index", "text/html", `
+  <h1>This project is to make and test the text processing scripts i will write</h1>
+  <div id="b1"></div>
+  `));
   
 }
 

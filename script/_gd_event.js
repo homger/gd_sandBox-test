@@ -19,6 +19,8 @@ class _gd_event{
     constructor(){
 
         this.eventNameList = new Map();
+        this._is_gd_event_target = true;
+        this._gd_parrent = undefined;
         //this.makeEventObject = this.makeEventObject.bind(this);
     }
 
@@ -53,8 +55,15 @@ class _gd_event{
         throw new Error("dispatchEvent(eventName)  eventName not found");
     }
 
+    
+    //need a better name?..
+    __circulateEvent(event){
+
+    }
+
     make_ObjectToDispatchWith_Event(eventObjectNameArray){
         let eventObj = {};
+        eventObj.eventOrigin = this;
         eventObjectNameArray.forEach(name => eventObj[name] = this[name]);
 
         return eventObj;

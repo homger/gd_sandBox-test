@@ -76,6 +76,13 @@ html, body {
   left: 20%;
   top: 0;
 }
+.gd_sandBox header .option {
+  margin-left: 5px;
+  background-color: pink;
+  width: 10%;
+  display: inline-block;
+  height: 100%;
+}
 .gd_sandBox section {
   width: 80%;
   height: 80%;
@@ -181,6 +188,9 @@ html, body {
   z-index: 0;
   left: 0;
   bottom: 0;
+}
+.gd_sandBox ._line {
+  height: 17px;
 }
 .gd_sandBox .editor-selector {
   position: relative;

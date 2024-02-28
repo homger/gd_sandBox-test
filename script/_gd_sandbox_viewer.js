@@ -9,10 +9,12 @@ function _gd_sandbox_viewer(className, id, log, _console){
         console.log(typeof this.srcdoc);
         if(typeof this.srcdoc == "string"){
             this.srcdoc = content;
+            console.log("SRC DOC");
         }
         else{
             this.addEventListener("load", function({target: iframe}){
                 this.contentDocument.documentElement.body.innerHTML = content;
+                console.log("NOT SRC DOC");
             });
         }
     }

@@ -5,9 +5,10 @@ document.addEventListener("readystatechange", function(){
     let rdata = Math.random() * 100000;
     
     
+    loadScript("script/_gd_event.js?v=" + rdata);
+    loadScript("script/_gd_sandbox_option.js?v=" + rdata);
     loadScript("script/_gd_console.js?v=" + rdata);
     loadScript("script/_gd_window.js?v=" + rdata);
-    loadScript("script/_gd_event.js?v=" + rdata);
     loadScript("script/_gd_sandbox_file.js?v=" + rdata);
     loadScript("script/_gd_sandbox_TEXT_PROCESSING.js?v=" + rdata);
     loadScript("script/_gd_sandbox_folder.js?v=" + rdata);
@@ -35,6 +36,7 @@ function main(){
   box.newProject("Project Gorgon");
 
   box.addFolder("/Project Gorgon","Subjects");
+  box.addFolder("/Project Gorgon","Subjects");
   box.addFolder("/Project Gorgon","Dogs");
   box.addFolder("/Project Gorgon/Subjects","pan");
   box.addFolder("/Project Gorgon/Subjects/pan","ldledle");
@@ -46,6 +48,11 @@ function main(){
   box.addFile("/Project Gorgon/Subjects/pan/pate/cathegories/Gas",new _gd_sandbox_file("Efect of gas type pate", "text/plain","The effects of the Gas type pate are so horendous that i dare not describe them in this document. Sowwy :("));
   box.addFile("/Project Gorgon/Subjects/pan/pate/cathegories",new _gd_sandbox_file("read me", "text/plain","Good job."));
   box.addFile("/Project Gorgon",new _gd_sandbox_file("test", "text/plain","Mad lad \n pap"));
+  box.addFile("/Project Gorgon",new _gd_sandbox_file("js test", "text/javascript",`document.addEventListener("readystatechange", function(){
+
+    if(document.readyState === "complete"){
+    }
+  });`));
   
   let Tete = box.newProject("Tete");
   let test1 = box.addFolder("/Tete","test1");

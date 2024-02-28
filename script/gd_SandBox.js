@@ -53,6 +53,7 @@ class gd_SandBox{
       this.dblclickSetup();
       this.editorSetup();
       this.consoleSetup();
+      this.optionsSetup();
     }
     buildUi(){
 
@@ -125,6 +126,7 @@ class gd_SandBox{
             
             ++this.projectCount;
             this.mountProjects();
+            newproject._gd_parrent = this;
             return newproject;
         }
     }
@@ -262,6 +264,10 @@ class gd_SandBox{
       this.dblclickNameList = [];
       this.dblclickNameList.push("file");
     }
+    /**Description:dbcliclCall;
+     *When doubleclicking on an element inside the sandbox tryes to find if the element or ones of his parent posses a class listed in ~dblclickNameList~
+     *if true an appropriate action should be called using ~dblclickAction~.[Not implemented]
+     */
     dblclickCall(event){
       console.log(event.screenX);
       
@@ -287,6 +293,14 @@ class gd_SandBox{
           return;
       } 
     }
+    /**Description:dblclickAction;
+     *Called when ~dblclickCall~ finds an element with the required class. [Needs to be implemented]
+     *Make-sure: mabybe use aposition of the cursor. {
+                x: event.pageX,
+                y: event.pageY,
+              }
+              wrote this as an addition arg for dblclickAction don't remember why
+     */
     dblclickAction(element){
       console.log("dblclickAction");
       this.openFile(element);
@@ -313,10 +327,24 @@ class gd_SandBox{
     
 
     test(fileEvent){
+      if( !this.optionMap.get("auto_refresh").status ){
+        return;
+      }
       console.log("FILE EVENT TEST");
       //this.viewer.setDocument("<script>window.console = window.parent._gd_SandBox.console;</script>" + fileEvent.content);
-      test_wrapJavascript(fileEvent.content, this.test_wraped_reciveFile.bind(this));
+      //test_wrapJavascript(fileEvent.content, this.test_wraped_reciveFile.bind(this));
+      test_wrapJavascript(fileEvent.content).then((fileStr) => {
+        console.log("THEN ");
+        this.viewer.setDocument(fileStr);
+      });
       console.log("test(fileEvent){");
+    }
+
+    renderCurrentSelectedFile(){
+      test_wrapJavascript(this.selectedFile.content).then((fileStr) => {
+        console.log("THEN ");
+        this.viewer.setDocument(fileStr);
+      });
     }
 
     test_wraped_reciveFile(fileString){
@@ -335,7 +363,11 @@ class gd_SandBox{
           file.removeEventListener("filechange", this.test);
         }
     }
-
+    /**Description:editorSetup;
+     *The only use for the moment is calling ~editorSelectorSetup~
+     * ~editorSelectorSetup~ is to create the little widgets at the top of the editor window that allow you to select a different file.
+     * 
+     */
     editorSetup(){
       this.editorSelectorSetup();
     }
@@ -405,8 +437,22 @@ class gd_SandBox{
       testConole(this._console, ...data);
     }*/
     
+
+    optionsSetup(){
+      this.optionMap = new Map();
+      this.optionMap.set("auto_refresh", new _gd_sandbox_option("auto_refresh", "checkbox", "toggle auto refresh of the render viewport"));
+      this.optionMap.set("refresh_viewport", new _gd_sandbox_option("refresh_viewport", "function", "refresh the viewport", this.renderCurrentSelectedFile.bind(this)));
+
+      this.header.append(this.optionMap.get("auto_refresh").uiElement)
+      this.header.append(this.optionMap.get("refresh_viewport").uiElement)
+    }
 }
 
+async function gd_search(searchStr){
+
+}
+
+const gd_search_worker_file = new _gd_sandbox_file("gd_search_worker_file", "text/javascript");
 
 
 /*

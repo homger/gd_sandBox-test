@@ -1,9 +1,11 @@
 'use strict';
 
 
-class _gd_sandbox_folder{
+class _gd_sandbox_folder extends _gd_event{
     constructor(name, uiElementType = "li", path = "/", files = new Map(), folders = new Map(), 
     creationDate = Date.now(), lastModified = Date.now()){
+      
+        super();
 
         if(!(typeof name == "string"))
             throw new Error ("'name' typeof is not string");
@@ -26,6 +28,8 @@ class _gd_sandbox_folder{
         this.ui_contentHide = true;
         this.icon = _FOLDER_ICON_48587455485841;
 
+        this.__addEventType("folderchange", ["lastModified"]);
+
         this.updateChildsParentFolder();
         this._make_ui_element();
 
@@ -37,6 +41,7 @@ class _gd_sandbox_folder{
         this._fullName = path + this._name;
         this._folders.forEach(folder => folder.path = this._childPath);
         this._files.forEach(file => file.path = this._childPath);
+        this.updated();
     }
     set name(name){
         if(!(typeof name == "string"))
@@ -125,7 +130,9 @@ class _gd_sandbox_folder{
             folder.path = this._childPath;
             this._folders.set(folder.name, folder);
             folder.parentFolder = this;
+            folder._gd_parrent = this;
         }
+        this.updated();
         this._ui_element_updateData();
         
     }
@@ -141,6 +148,8 @@ class _gd_sandbox_folder{
         this._files.set(file.name, file);
         file._path = this._childPath;
         file.parentFolder = this;
+        file._gd_parrent = this;
+        this.updated();
         this._ui_element_updateData();
     }
     newFile(name, MIME, content){
@@ -148,6 +157,8 @@ class _gd_sandbox_folder{
       this.addFile(file);
       return file;
     }
+
+    //Auto overrides with the new data
     mergeFolder(folder){
         if(!is_gd_sandbox_folder(folder)){
             throw new Error("folder is not instanceof _gd_sandbox_folder");
@@ -155,23 +166,38 @@ class _gd_sandbox_folder{
         //folder.path = this._path;
         folder.folders.forEach((folderData) =>{
             if(this._folders.has(folderData.name)){
-                this._folders.get(name).
+                this._folders.get(folderData.name).
                 mergeFolder(_folderFromFolderData(folderData));
             }
-            else{
-                this._folders.set(folderData.name, 
-                  _folderFromFolderData(folderData));
+            else{_gd_parrent
+                let new_temp_folder = _folderFromFolderData(folderData);
+                new_temp_folder._gd_parrent = this;
+                this._folders.set(folderData.name, new_temp_folder);
+
             }
         });
-        folder.files.forEach((fileData) => {
-            this._files.set(fileData.name, 
-              _fileFromFileData(fileData));
-        } );
+        
+        //Should just make a file??
+        /*folder.files.forEach((fileData) => {
+            let new_temp_file = _folderFromFolderData(folderData);  
+            new_temp_file._gd_parrent = this;
 
+            this._files.set(fileData.name,  new_temp_file);
+
+
+        } );*/
+        folder.files.forEach((fileData) => {
+          fileData._gd_parrent = this;
+
+          this._files.set(fileData.name,  fileData);
+
+
+      } );
         this.path = this._path;
 
         console.log("MERGE DONE :  ")
         console.log(this.folderData());
+        this.updated();
         this._ui_element_updateData();
     }
 
@@ -273,26 +299,42 @@ class _gd_sandbox_folder{
         
         //this._files.forEach(file => file.removeFile());
         this.parentFolder._folders.delete(this.name);
-
+        this.uiElement.parentNode.removeChild(this.uiElement);
       }
-      this.uiElement.parentNode.removeChild(this.uiElement);
     }
     removeChildFoler(name){
-      if(this._folders.has(name))
+      if(this._folders.has(name)){
         this._folders.get(name).removeFolder();
+        this.updated();
+      }
+        
     }
     removeFile(name){
-      if(this._files.has(name))
+      if(this._files.has(name)){
         this._files.get(name).removeFile();
+        this.updated();
+      }
+        
     }
 
     updateChildsParentFolder(){
       this._folders.forEach((folder) => {
         folder.parentFolder = this;
+        folder._gd_parrent = this;
       });
       this._files.forEach((file) => {
         file.parentFolder = this;
+        folder._gd_parrent = this;
       });
+      this.updated();
+    }
+
+    updated(){
+      this._lastModified = Date.now();
+      this.dispatchEvent("folderchange");
+    }
+    async searchFile(fileName){
+
     }
 }
 

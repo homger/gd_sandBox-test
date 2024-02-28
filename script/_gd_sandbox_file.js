@@ -145,10 +145,14 @@ class _gd_sandbox_file extends _gd_event{
     }
     url(){
         if(this._url !== undefined){
-            URL.revokeObjectURL(this._url);
-            this._url = URL.createObjectURL(this.js_File());
+            if(this._url_file_date != this._lastModified){
+                URL.revokeObjectURL(this._url);
+                this._url = URL.createObjectURL(this.js_File());
+                this._url_file_date = this._lastModified;
+            }
         }
         else{
+            this._url_file_date = this._lastModified;
             this._url = URL.createObjectURL(this.js_File());
         }
         return this._url;
@@ -170,3 +174,19 @@ function _fileFromFileData(file){
 function is_gd_sandbox_file(file){
     return (file instanceof _gd_sandbox_file);
 }
+
+/**
+ * text/javascript
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */

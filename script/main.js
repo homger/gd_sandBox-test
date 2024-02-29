@@ -33,7 +33,15 @@ function main(){
   //let _win = new _gd_window(viewer,{boundingBlock: document.querySelector(".gd_sandBox")});
 
   //let _w2 = new _gd_window(document.querySelector(".gd_sandBox_nav"),{boundingBlock: document.querySelector(".gd_sandBox")});
+  box.newProject("JS TEST");
+  box.addFile("/JS TEST",new _gd_sandbox_file("js test", "text/javascript",`document.addEventListener("readystatechange", function(){
+
+    if(document.readyState === "complete"){
+      document.body.innerHTML = "Hello world!"
+    }
+  });`));
   box.newProject("Project Gorgon");
+
 
   box.addFolder("/Project Gorgon","Subjects");
   box.addFolder("/Project Gorgon","Subjects");
@@ -48,11 +56,7 @@ function main(){
   box.addFile("/Project Gorgon/Subjects/pan/pate/cathegories/Gas",new _gd_sandbox_file("Efect of gas type pate", "text/plain","The effects of the Gas type pate are so horendous that i dare not describe them in this document. Sowwy :("));
   box.addFile("/Project Gorgon/Subjects/pan/pate/cathegories",new _gd_sandbox_file("read me", "text/plain","Good job."));
   box.addFile("/Project Gorgon",new _gd_sandbox_file("test", "text/plain","Mad lad \n pap"));
-  box.addFile("/Project Gorgon",new _gd_sandbox_file("js test", "text/javascript",`document.addEventListener("readystatechange", function(){
 
-    if(document.readyState === "complete"){
-    }
-  });`));
   
   let Tete = box.newProject("Tete");
   let test1 = box.addFolder("/Tete","test1");
@@ -63,10 +67,12 @@ function main(){
   for(let i = 0; i < 15; ++i){
     box.addFile("/Tete/test2",new _gd_sandbox_file("Try me" + i, "text/plain","Tried."));
   }
+  //debugger;
   test1.mergeFolder(test2);
   Tete.projectFolder.removeChildFoler("test2");
 
   let txt_psp = box.newProject("Project for text processing");
+  console.log("txt_psp : " + txt_psp)
   //txt_psp.addFile()
   box.addFile(txt_psp.path, new _gd_sandbox_file("script", "text/javascript",`
 

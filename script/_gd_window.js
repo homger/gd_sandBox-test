@@ -94,7 +94,23 @@ class _gd_window{
             
 
             this.deactivateTransitions();
+            this.transition_was_activated = false;
             //return this;
+    }
+
+    setBoundingBlock(newBoundingBlock){ //to-do block all _gd_window action durring change..
+
+      this.boundingBlock.removeEventListener("scroll", this.boundingBlock_scroll);
+      this.boundingBlock = newBoundingBlock;
+      this.boundingBlock.appendChild(this.htmlBlockElementToMove);
+
+      this.boundingBlock.addEventListener("scroll", this.boundingBlock_scroll);
+
+      
+      this.refreshGeometry();
+      this.sizeCheck();
+      this.setPosition();
+
     }
 
     scrollFix(event){
@@ -144,13 +160,23 @@ class _gd_window{
           this._mouseDownPositionX = event.pageX;
           this._mouseDownPositionY = event.pageY;
           this.movingDiv.style.zIndex = this.moving_z_index;
+
+          if(this.transition_is_activated){
+            this.transition_was_activated = true;
+          }
+          else{
+            this.transition_was_activated = false;
+          }
           this.deactivateTransitions();
+          
           window.addEventListener("mousemove", this.mouseMove);
           window.addEventListener("mouseup", this.mouseUp);
         }
     }
     mouseUp(){
+      if(this.transition_was_activated){
         this.activateTransition();
+      }
         this.movingDiv.style.zIndex = this.default_z_index;
         window.removeEventListener("mousemove", this.mouseMove);
         window.removeEventListener("mouseup", this.mouseUp);
@@ -280,6 +306,8 @@ class _gd_window{
         if(this.parameters.controlPanelPadding){
           this.htmlBlockElementToMove.style.paddingTop = "50px";
         }
+
+        this.initialTransition = "width, height, top, left";
     }
     sizeCheck(){
         if(this.htmlBlockElementToMove.offsetHeight > this.boundingBlock.offsetHeight)
@@ -308,13 +336,16 @@ class _gd_window{
     }
 
     deactivateTransitions(){
-      this.initialTransition = window.getComputedStyle(this.htmlBlockElementToMove).getPropertyValue("transition-property");
+      //this.initialTransition = window.getComputedStyle(this.htmlBlockElementToMove).getPropertyValue("transition-property");
       this.htmlBlockElementToMove.style.transitionProperty = "none";
       console.log("this.initialTransition  ::" + 
       this.initialTransition);
+
+      this.transition_is_activated = false;
     }
     activateTransition(){
       this.htmlBlockElementToMove.style.transitionProperty = this.initialTransition;
+      this.transition_is_activated = true;
     }
 }
 function get_offsetXY(element){

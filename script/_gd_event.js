@@ -38,6 +38,7 @@ class _gd_event{
         this.eventNameList.get(name).callFunctionList.delete(callFunction);
     }
 
+    /*eventObjectNameArray is an Array of string. Each of them elements of the future object that will dispatch the event*/
     __addEventType(name, eventObjectNameArray){
         this.eventNameList.set(name, {eventObjectNameArray: eventObjectNameArray, callFunctionList: new Set()});
     }

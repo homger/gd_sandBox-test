@@ -88,7 +88,7 @@ class _gd_sandbox_folder extends _gd_event{
     }
     get files(){ //List files fileData
         let cach = [];
-        this._files.forEach(file => cach.push(file.fileData));
+        this._files.forEach(file => cach.push(file));
         return cach;
     }
     getFileArrayList(){
@@ -169,7 +169,7 @@ class _gd_sandbox_folder extends _gd_event{
                 this._folders.get(folderData.name).
                 mergeFolder(_folderFromFolderData(folderData));
             }
-            else{_gd_parrent
+            else{
                 let new_temp_folder = _folderFromFolderData(folderData);
                 new_temp_folder._gd_parrent = this;
                 this._folders.set(folderData.name, new_temp_folder);

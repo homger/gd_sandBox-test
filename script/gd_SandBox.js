@@ -82,6 +82,10 @@ class gd_SandBox{
 
       this.main.append(this.viewWindow);
       this.viewWindow_gd_window_object = new _gd_window(this.viewWindow, {defaultPosition:{top: 500, left: 500},boundingBlock: this.main, default_z_index: -1});
+      this.viewWindow_gd_window_object_boundingblock = "main";
+
+
+      
       
       this.viewer = _gd_sandbox_viewer("gd_viewer");
       this.viewWindow.append(this.viewer);
@@ -255,6 +259,9 @@ class gd_SandBox{
 
         }.bind(this), "close-file"],
       ], ["file","selector"]);
+
+      this.contextMenu.addContextMenu("option");//,[], [folderClassName]);
+      this.contextMenu.addClass("option", "option");
       }
     
     _preventDefault(event){
@@ -440,11 +447,48 @@ class gd_SandBox{
 
     optionsSetup(){
       this.optionMap = new Map();
+      
       this.optionMap.set("auto_refresh", new _gd_sandbox_option("auto_refresh", "checkbox", "toggle auto refresh of the render viewport"));
-      this.optionMap.set("refresh_viewport", new _gd_sandbox_option("refresh_viewport", "function", "refresh the viewport", this.renderCurrentSelectedFile.bind(this)));
-
       this.header.append(this.optionMap.get("auto_refresh").uiElement)
+      
+      //=========================================================
+      
+      this.optionMap.set("refresh_viewport", new _gd_sandbox_option("refresh_viewport", "function", "refresh the viewport", this.renderCurrentSelectedFile.bind(this)));
       this.header.append(this.optionMap.get("refresh_viewport").uiElement)
+      
+      //=========================================================
+      
+      this.optionMap.set("toggle_view_window_transition", 
+      new _gd_sandbox_option("toggle_view_window_transition", "checkbox", "toggle transitions of the render viewport"));
+      
+      this.optionMap.get("toggle_view_window_transition").addEventListener("activated",function(event){
+        if(event.status){
+          this.viewWindow_gd_window_object.activateTransition();
+        }
+        else{
+          this.viewWindow_gd_window_object.deactivateTransitions();
+        }
+      }.bind(this));
+
+      this.header.append(this.optionMap.get("toggle_view_window_transition").uiElement);
+
+      //=========================================================
+
+      this.optionMap.set("select_viewer_bounding_block", new _gd_sandbox_option("select_viewer_bounding_block", "text_value_select", "Select the boundingblock of the render viewport",
+      ["nav","header","editor","footer","main"]));
+
+      this.optionMap.get("select_viewer_bounding_block").addEventListener("activated",function({status}){
+        if(this.viewWindow_gd_window_object_boundingblock == status)
+          return;
+
+        this.viewWindow_gd_window_object.setBoundingBlock(this[status]);
+        this.viewWindow_gd_window_object_boundingblock = status
+        
+      }.bind(this));
+      this.header.append(this.optionMap.get("select_viewer_bounding_block").uiElement);
+
+      //=========================================================
+      
     }
 }
 
